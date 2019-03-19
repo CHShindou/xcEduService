@@ -1,13 +1,15 @@
 package com.xuecheng.framework.domain.cms.request;
 
 import com.xuecheng.framework.model.request.RequestData;
+import lombok.Data;
 
 /**
  * @Auther : shindou
  * @Date : 2019/3/19
- * @Description : 功能描述
+ * @Description : 将查询条件封装（不是很明白为什么要这么麻烦）
  * @Version : 1.0
  */
+@Data
 public class QueryPageRequest extends RequestData {
 
     //站点id
