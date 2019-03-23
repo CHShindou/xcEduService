@@ -13,4 +13,6 @@ public interface CmsPageControllerApi {
 
     //页面查询
     QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
+
+
 }

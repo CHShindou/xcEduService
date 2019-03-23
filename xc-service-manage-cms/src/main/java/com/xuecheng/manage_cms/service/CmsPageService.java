@@ -6,10 +6,9 @@ import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,11 +27,37 @@ public class CmsPageService {
         if(page <= 0){
             page = 1;
         }
+        if(queryPageRequest == null){
+            queryPageRequest = new QueryPageRequest();
+        }
         //Pageable类中，page=0表示第一页，所以要将传入的参数page-1操作
         page -= 1;
         //Pageable 分页对象
         Pageable pageable = PageRequest.of(page,size);
-        Page<CmsPage> pages = cmsPageRepository.findAll(pageable);
+
+        //创建查询条件容器  并赋值
+        CmsPage cmsPage = new CmsPage();
+        //赋值站点ID
+        if(StringUtils.isNotEmpty(queryPageRequest.getSiteId())){
+            cmsPage.setSiteId(queryPageRequest.getSiteId());
+        }
+        //模板id
+        if(StringUtils.isNotEmpty(queryPageRequest.getTemplateId())){
+            cmsPage.setTemplateId(queryPageRequest.getTemplateId());
+        }
+        //页面别名
+        if (StringUtils.isNotEmpty(queryPageRequest.getPageAliase())){
+            cmsPage.setPageAliase(queryPageRequest.getPageAliase());
+        }
+        //创建查询规则、匹配方式：站点ID和模板ID是精确查询（默认，不需要设置）,页面别名是模糊查询
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching();
+        exampleMatcher =
+                exampleMatcher.withMatcher("pageAliase",ExampleMatcher.GenericPropertyMatchers.contains());
+
+        //创建查询条件实例
+        Example<CmsPage> example = Example.of(cmsPage,exampleMatcher);
+
+        Page<CmsPage> pages = cmsPageRepository.findAll(example,pageable);
         QueryResult queryResult = new QueryResult();
         queryResult.setList(pages.getContent());
         queryResult.setTotal(pages.getTotalElements());
