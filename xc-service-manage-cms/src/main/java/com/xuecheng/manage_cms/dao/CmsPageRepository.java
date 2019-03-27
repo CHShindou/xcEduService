@@ -15,4 +15,9 @@ import java.util.List;
 public interface CmsPageRepository extends MongoRepository<CmsPage,String> {
 
    List<CmsPage> findByPageAliase(String pageAliase);
+
+   List<CmsPage> findByPageNameAndSiteIdAndPageWebPath(String pageName,String siteId,String pageWebPath);
+
+
+
 }
