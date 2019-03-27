@@ -5,6 +5,7 @@ import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_cms.service.CmsPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,12 @@ public class CmsPageController implements CmsPageControllerApi {
     }
 
     @Override
+    @RequestMapping(value = "/delete/{pageId}",method = RequestMethod.DELETE)
+    public ResponseResult deletePage(@PathVariable String pageId) {
+        return cmsPageService.deletePage(pageId);
+    }
+
+    @Override
     @RequestMapping("/list/{page}/{size}")
     public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
 
@@ -53,7 +60,6 @@ public class CmsPageController implements CmsPageControllerApi {
         list.add(cmsPage);
         queryResult.setList(list);
         QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);*/
-
 
 
         return cmsPageService.findCmsPageList(page,size,queryPageRequest);

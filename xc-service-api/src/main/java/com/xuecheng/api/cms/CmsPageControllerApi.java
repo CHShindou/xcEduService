@@ -4,6 +4,7 @@ import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.ResponseResult;
 
 /**
  * @Auther : shindou
@@ -24,4 +25,7 @@ public interface CmsPageControllerApi {
 
     //修改页面信息
     CmsPageResult editPage(String pageId,CmsPage cmsPage);
+
+    //删除页面信息
+    ResponseResult deletePage(String pageId);
 }
