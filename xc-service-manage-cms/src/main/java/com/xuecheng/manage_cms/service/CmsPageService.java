@@ -2,7 +2,9 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -71,7 +73,7 @@ public class CmsPageService {
 
     }
 
-
+/*
     public CmsPageResult addPage(CmsPage cmspage){
         //检测该页面是否存在.....根据siteId  pageName   pageWebPath作为唯一索引检测
         List<CmsPage> lists =
@@ -80,6 +82,33 @@ public class CmsPageService {
         if(lists.size()>0){
             //页面已经存在
             return new CmsPageResult(CommonCode.FAIL,null);
+        }
+        //页面不存在,可以新增
+        cmspage.setPageId(null);//主键id由mongoDB自动生成
+        cmspage = cmsPageRepository.save(cmspage);
+        return new CmsPageResult(CommonCode.SUCCESS,cmspage);
+    }*/
+
+    /***
+     * 测试下异常处理,自定义异常以及不可预知异常
+     * 异常处理  主要是反馈给前端
+     * @param cmspage
+     * @return
+     */
+    public CmsPageResult addPage(CmsPage cmspage){
+        if(cmspage == null){
+            //参数不合法，抛出异常
+
+        }
+
+        //检测该页面是否存在.....根据siteId  pageName   pageWebPath作为唯一索引检测
+        List<CmsPage> lists =
+                cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+                        cmspage.getPageName(),cmspage.getSiteId(),cmspage.getPageWebPath());
+        if(lists.size()>0){
+            //页面已经存在,抛出异常
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+
         }
         //页面不存在,可以新增
         cmspage.setPageId(null);//主键id由mongoDB自动生成
