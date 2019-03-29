@@ -143,6 +143,8 @@ public class CmsPageService {
             cmsPage1.setPageWebPath(cmsPage.getPageWebPath());
             //更新物理路径
             cmsPage1.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+            //更新dataUrl
+            cmsPage1.setDataUrl(cmsPage.getDataUrl());
 
             //执行修改(保存)
             cmsPage1 = cmsPageRepository.save(cmsPage1);
