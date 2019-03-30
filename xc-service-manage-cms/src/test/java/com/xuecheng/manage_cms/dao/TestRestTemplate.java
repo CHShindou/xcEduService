@@ -66,7 +66,7 @@ public class TestRestTemplate {
     @Test
     public void testGridFSBucket() throws IOException {
         //mongodb中存取的文件ID
-        String fileId = "5c9e3fd8ab2bdc1d68a1c792";
+        String fileId = "5c9eeaf4377c7a0cf8b81815";
         //根据ID查询文件
         GridFSFile gridFSFile = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(fileId)));
         //打开下载流对象
