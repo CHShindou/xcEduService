@@ -48,6 +48,11 @@ public class CmsPageController implements CmsPageControllerApi {
     }
 
     @Override
+    public ResponseResult postPage(String pageId) {
+        return null;
+    }
+
+    @Override
     @RequestMapping("/list/{page}/{size}")
     public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
 

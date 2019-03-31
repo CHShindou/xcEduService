@@ -28,4 +28,7 @@ public interface CmsPageControllerApi {
 
     //删除页面信息
     ResponseResult deletePage(String pageId);
+
+    //发布页面
+    ResponseResult postPage(String pageId);
 }

@@ -1,8 +1,8 @@
 server:
-  port: 31001
+  port: 31000
 spring:
   application:
-    name: xc-service-manage-cms
+    name: xc-service-manage-cms-client
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017
@@ -13,3 +13,7 @@ spring:
     username: guest
     password: guest
     virtualHost: "/"
+xuecheng:
+  mq:
+    queue: queue_cms_postpage_01
+    routingkey: 5c9a4217ab2bdc33a4e5eb41  #routingkey为门户站点ID
