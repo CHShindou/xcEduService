@@ -1,6 +1,7 @@
 package com.xuecheng.manage_cms.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +16,7 @@ public class RabbitmqConfig {
 
     //交换机名称
     public static final String EX_CMS_POSTPAGE = "ex_cms_postpage";
+
 
     //配置交换机
     @Bean(EX_CMS_POSTPAGE)

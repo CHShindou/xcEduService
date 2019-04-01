@@ -26,8 +26,8 @@ public class RabbitmqConfig {
     public String queue_cms_postpage_name;
 
     //路由名称(即站点id 从配置文件中获取)
-    @Value("${xuecheng.mq.routingkey}")
-    public String routingkey;
+    @Value("${xuecheng.mq.routingKey}")
+    public String routingKey;
 
     //配置交换机
     @Bean(EX_CMS_POSTPAGE)
@@ -51,6 +51,6 @@ public class RabbitmqConfig {
     @Bean
     public Binding bindingQueueExchange(
             @Qualifier(QUEUE_CMS_POSTPAGE) Queue queue, @Qualifier(EX_CMS_POSTPAGE) Exchange exchange){
-        return BindingBuilder.bind(queue).to(exchange).with(routingkey).noargs();
+        return BindingBuilder.bind(queue).to(exchange).with(routingKey).noargs();
     }
 }

@@ -8,12 +8,12 @@ spring:
       uri: mongodb://root:root@localhost:27017
       database: xc_cms
   rabbitmq:
-    host: 192.168.36.150
+    host: 192.168.41.150
     port: 5672
-    username: guest
-    password: guest
+    username: shindou
+    password: shindou
     virtualHost: "/"
 xuecheng:
   mq:
     queue: queue_cms_postpage_01
-    routingkey: 5c9a4217ab2bdc33a4e5eb41  #routingkey为门户站点ID
+    routingKey: 5a751fab6abb5044e0d19ea1  #routingkey为门户站点ID

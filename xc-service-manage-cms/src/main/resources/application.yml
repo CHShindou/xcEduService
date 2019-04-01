@@ -8,8 +8,8 @@ spring:
       uri: mongodb://root:root@localhost:27017
       database: xc_cms
   rabbitmq:
-    host: 192.168.36.150
+    host: 192.168.41.150
     port: 5672
-    username: guest
-    password: guest
+    username: shindou
+    password: shindou
     virtualHost: "/"

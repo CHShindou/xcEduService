@@ -1,6 +1,7 @@
 package com.xuecheng.manage_cms_client.mq;
 
 import com.alibaba.fastjson.JSON;
+import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.manage_cms_client.service.PageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,20 +21,24 @@ import java.util.Map;
 @Component
 public class ConsumerPostPage {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerPostPage.class);
-
+    private static  final Logger LOGGER = LoggerFactory.getLogger(ConsumerPostPage.class);
     @Autowired
     PageService pageService;
 
     @RabbitListener(queues = {"${xuecheng.mq.queue}"})
     public void postPage(String msg){
-
-        //msg是个json格式的字符串
-        Map map = JSON.parseObject(msg,Map.class);
-        LOGGER.info("receive cms post page:{}",msg.toString());
+        //解析消息
+        Map map = JSON.parseObject(msg, Map.class);
+        //得到消息中的页面id
         String pageId = (String) map.get("pageId");
-
-        //调用service将页面保存到物理路径
+        //校验页面是否合法
+        CmsPage cmsPage = pageService.findPageById(pageId);
+        if(cmsPage == null){
+            LOGGER.error("receive postpage msg,cmsPage is null,pageId:{}",pageId);
+            return ;
+        }
+        //调用service方法将页面从GridFs中下载到服务器
         pageService.savePageToServerPath(pageId);
+
     }
 }
