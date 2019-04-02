@@ -37,7 +37,7 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     @RequestMapping(value = "/edit/{pageId}",method = RequestMethod.PUT)
-    public CmsPageResult editPage(@PathVariable String pageId, @RequestBody CmsPage cmsPage) {
+    public CmsPageResult editPage(@PathVariable("pageId") String pageId, @RequestBody CmsPage cmsPage) {
         return cmsPageService.updatePage(pageId,cmsPage);
     }
 
@@ -56,7 +56,7 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     @RequestMapping("/list/{page}/{size}")
-    public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
+    public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size,@RequestBody QueryPageRequest queryPageRequest) {
 
         /*QueryResult queryResult = new QueryResult();
         queryResult.setTotal(1);
