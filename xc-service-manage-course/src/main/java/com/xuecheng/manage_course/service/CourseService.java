@@ -4,9 +4,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -42,6 +44,7 @@ public class CourseService {
     CourseBaseRepository courseBaseRepository;
 
 
+    //查询课程计划
     public TeachplanNode findTeachplanTreeList(String courseId){
         TeachplanNode teachPlanTree = courseMapper.findTeachPlanTree(courseId);
         return teachPlanTree;
@@ -120,6 +123,66 @@ public class CourseService {
         queryResult.setTotal(pages.getTotal());
         return new QueryResponseResult(CommonCode.SUCCESS,queryResult);
 
+    }
+
+    //查询单个课程详细信息
+    public CourseBase findCourseBaseById(String id){
+        if(StringUtils.isEmpty(id)){
+            ExceptionCast.cast(CourseCode.COURSE_PUBLISH_COURSEIDISNULL);
+        }
+        Optional<CourseBase> optional = courseBaseRepository.findById(id);
+        if(!optional.isPresent()){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        CourseBase courseBase = optional.get();
+        return courseBase;
+    }
+
+
+    //查询课程分类信息
+    public CategoryNode findCategoryList(){
+        return courseMapper.findCategoryList();
+    }
+
+    //添加课程信息
+    public ResponseResult addCourseBase(CourseBase courseBase){
+        if(courseBase == null ||
+                StringUtils.isEmpty(courseBase.getName()) ||
+                StringUtils.isEmpty(courseBase.getGrade()) ||
+                StringUtils.isEmpty(courseBase.getStudymodel())){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //新增的课程设置为制作中
+        courseBase.setStatus("202001");
+        courseBaseRepository.save(courseBase);
+        return new ResponseResult(CommonCode.SUCCESS);
+
+    }
+
+    //修改课程信息
+    @Transactional
+    public ResponseResult editCourseBase(String courseId,CourseBase courseBase){
+        if(courseBase == null ||
+                StringUtils.isEmpty(courseId) ||
+                StringUtils.isEmpty(courseBase.getName()) ||
+                StringUtils.isEmpty(courseBase.getGrade()) ||
+                StringUtils.isEmpty(courseBase.getStudymodel())){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //通过课程ID查询原本的数据
+        CourseBase old = this.findCourseBaseById(courseId);
+        if(old == null){
+            return new ResponseResult(CommonCode.FAIL);
+        }
+        old.setName(courseBase.getName());
+        old.setUsers(courseBase.getUsers());
+        old.setMt(courseBase.getMt());
+        old.setSt(courseBase.getSt());
+        old.setGrade(courseBase.getGrade());
+        old.setStudymodel(courseBase.getStudymodel());
+        old.setDescription(courseBase.getDescription());
+        courseBaseRepository.save(old);
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 
 

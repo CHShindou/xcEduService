@@ -1,6 +1,8 @@
 package com.xuecheng.api.course;
 
+import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -20,6 +22,19 @@ public interface CourseControllerApi {
     //添加课程计划
     ResponseResult addTeachplan(Teachplan teachplan);
 
-    //查询课程信息
+    //分类查询所有课程信息
     QueryResponseResult findCoursePage(int page, int size, CourseListRequest courseListRequest);
+
+    //根据课程Id查询单个课程信息
+    CourseBase findCourseById(String id);
+
+    //查询所有课程分类信息
+    CategoryNode findGategoryTreeList();
+
+    //添加课程
+    ResponseResult addCourseBase(CourseBase courseBase);
+
+    //课程修改
+    ResponseResult editCourseBase(String id,CourseBase courseBase);
+
 }
