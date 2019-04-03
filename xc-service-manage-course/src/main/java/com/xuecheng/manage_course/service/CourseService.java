@@ -3,6 +3,7 @@ package com.xuecheng.manage_course.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
@@ -16,6 +17,7 @@ import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.dao.CourseBaseRepository;
 import com.xuecheng.manage_course.dao.CourseMapper;
+import com.xuecheng.manage_course.dao.CourseMarketRepository;
 import com.xuecheng.manage_course.dao.TeachplanRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class CourseService {
 
     @Autowired
     CourseBaseRepository courseBaseRepository;
+
+    @Autowired
+    CourseMarketRepository courseMarketRepository;
 
 
     //查询课程计划
@@ -182,6 +187,31 @@ public class CourseService {
         old.setStudymodel(courseBase.getStudymodel());
         old.setDescription(courseBase.getDescription());
         courseBaseRepository.save(old);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+
+    //查询课程营销信息
+    public CourseMarket findCourseMarketByCourse(String courseId){
+        if(StringUtils.isEmpty(courseId)){
+            ExceptionCast.cast(CourseCode.COURSE_PUBLISH_COURSEIDISNULL);
+        }
+        Optional<CourseMarket> optional = courseMarketRepository.findById(courseId);
+        if(optional.isPresent()){
+            CourseMarket courseMarket = optional.get();
+            return courseMarket;
+        }
+        return null;
+    }
+
+    //添加or更新课程营销信息
+    public ResponseResult updateCourseMarket(String courseId,CourseMarket courseMarket){
+        if(courseMarket == null || StringUtils.isEmpty(courseId)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //数据表中的信息和需要更新的数据一致，直接执行save新数据的操作
+        courseMarket.setId(courseId);
+        courseMarketRepository.save(courseMarket);
         return new ResponseResult(CommonCode.SUCCESS);
     }
 
