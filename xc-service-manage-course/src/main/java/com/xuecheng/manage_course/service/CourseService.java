@@ -3,6 +3,7 @@ package com.xuecheng.manage_course.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
@@ -16,6 +17,7 @@ import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.dao.CourseBaseRepository;
 import com.xuecheng.manage_course.dao.CourseMapper;
+import com.xuecheng.manage_course.dao.CoursePicRepository;
 import com.xuecheng.manage_course.dao.TeachplanRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class CourseService {
 
     @Autowired
     CourseBaseRepository courseBaseRepository;
+
+    @Autowired
+    CoursePicRepository coursePicRepository;
 
 
     //查询课程计划
@@ -183,6 +188,49 @@ public class CourseService {
         old.setDescription(courseBase.getDescription());
         courseBaseRepository.save(old);
         return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+
+    //保存课程图片
+    public ResponseResult saveCoursePic(String courseId,String pic){
+        if(StringUtils.isEmpty(courseId) || StringUtils.isEmpty(pic)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        CoursePic coursePic = new CoursePic();
+        //个人认为这里不需要判断之前该课程是否存在图片。
+//        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+//        if(optional.isPresent()){
+//
+//        }
+        coursePic.setCourseid(courseId);
+        coursePic.setPic(pic);
+        coursePicRepository.save(coursePic);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    //查询课程图片
+    public CoursePic findCoursePic(String courseId){
+        if(StringUtils.isEmpty(courseId)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+        if(optional.isPresent()){
+            return optional.get();
+        }
+        return null;
+    }
+
+
+    //删除课程图片
+    public ResponseResult deleteCoursePic(String courseId){
+        if(StringUtils.isEmpty(courseId)){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+
+        //如果删除失败会报异常
+        coursePicRepository.deleteById(courseId);
+        return new ResponseResult(CommonCode.SUCCESS);
+
     }
 
 

@@ -1,0 +1,5 @@
+server:
+  port: 22111
+spring:
+  application:
+    name: test-fastdfs
