@@ -2,6 +2,7 @@ package com.xuecheng.manage_course.controller;
 
 import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
@@ -87,5 +88,17 @@ public class CourseController implements CourseControllerApi {
     @RequestMapping(value = "/coursepic/delete",method = RequestMethod.DELETE)
     public ResponseResult deleteCoursePic(String courseId) {
         return courseService.deleteCoursePic(courseId);
+    }
+
+    @Override
+    @RequestMapping(value = "/market/{courseId}",method = RequestMethod.GET)
+    public CourseMarket findCourseMarket(@PathVariable("courseId") String courseId) {
+        return courseService.findCourseMarketByCourse(courseId);
+    }
+
+    @Override
+    @RequestMapping(value = "/market/update/{courseId}",method = RequestMethod.POST)
+    public ResponseResult updateCourseMarket(@PathVariable("courseId") String courseId,@RequestBody CourseMarket courseMarket) {
+        return courseService.updateCourseMarket(courseId,courseMarket);
     }
 }

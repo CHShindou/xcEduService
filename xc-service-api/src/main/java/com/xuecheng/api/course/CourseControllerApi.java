@@ -2,6 +2,7 @@ package com.xuecheng.api.course;
 
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.domain.course.CoursePic;
+import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
@@ -46,5 +47,11 @@ public interface CourseControllerApi {
 
     //删除课程图片
     ResponseResult deleteCoursePic(String courseId);
+
+    //查询课程营销信息
+    CourseMarket findCourseMarket(String courseId);
+
+    //新增或者更新课程营销信息
+    ResponseResult updateCourseMarket(String courseId,CourseMarket courseMarket);
 
 }
