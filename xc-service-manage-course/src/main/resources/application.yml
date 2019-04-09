@@ -17,3 +17,13 @@ spring:
       testOnReturn: false #归还连接时检测连接是否有效
       timeBetweenEvictionRunsMillis: 60000 #配置间隔检测连接是否有效的时间（单位是毫秒）
       minEvictableIdleTimeMillis: 300000  #连接在连接池的最小生存时间（毫秒）
+eureka:
+  client:
+    register-with-eureka: true  #注册服务，是否将自己注册到eureka服务中
+    fetch-registry: true        #服务发现，是否从eureka中获取注册信息
+    service-url:       #eureka客户端与eureka服务端的交互地址，高可用状态配置对方地址，单机状态配置自己的
+      defaultZone: ${EUREKA_SERVER:http://localhost:50101/eureka/}
+  instance:
+    prefer-ip-address: true    #将自己的IP地址注册到eureka服务中
+    ip-address: ${IP_ADDRESS:127.0.0.1}
+    instance-id: ${spring.application.name}:${server.port}  #指定实例id
