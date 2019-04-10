@@ -6,8 +6,10 @@ import com.xuecheng.framework.domain.course.CourseMarket;
 import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
+import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
@@ -100,5 +102,17 @@ public class CourseController implements CourseControllerApi {
     @RequestMapping(value = "/market/update/{courseId}",method = RequestMethod.POST)
     public ResponseResult updateCourseMarket(@PathVariable("courseId") String courseId,@RequestBody CourseMarket courseMarket) {
         return courseService.updateCourseMarket(courseId,courseMarket);
+    }
+
+    @Override
+    @RequestMapping(value = "/courseview/{courseId}",method = RequestMethod.GET)
+    public CourseView findCourseView(@PathVariable("courseId") String courseId) {
+        return courseService.findCourseView(courseId);
+    }
+
+    @Override
+    @RequestMapping(value = "/preview/{courseId}",method = RequestMethod.GET)
+    public CoursePublishResult previewCourse(@PathVariable("courseId") String courseId) {
+        return courseService.previewCourse(courseId);
     }
 }

@@ -31,4 +31,7 @@ public interface CmsPageControllerApi {
 
     //发布页面
     ResponseResult postPage(String pageId);
+
+    //新增或者修改页面信息(页面已存在则修改，页面不存在则新增)
+    CmsPageResult addOrEditPage(CmsPage cmsPage);
 }

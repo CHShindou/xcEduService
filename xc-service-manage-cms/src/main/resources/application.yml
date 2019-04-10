@@ -13,6 +13,10 @@ spring:
     username: shindou
     password: shindou
     virtualHost: "/"
+  freemarker:
+    cache: false   #关闭模板缓存，方便测试
+    settings:
+      template_update_delay: 0
 
 eureka:
   client:

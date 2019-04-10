@@ -1,12 +1,14 @@
 package com.xuecheng.api.course;
 
 import com.xuecheng.framework.domain.course.CourseBase;
-import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.CourseMarket;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
+import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 
@@ -53,5 +55,11 @@ public interface CourseControllerApi {
 
     //新增或者更新课程营销信息
     ResponseResult updateCourseMarket(String courseId,CourseMarket courseMarket);
+
+    //课程视图查询（查询课程的所有信息）
+    CourseView findCourseView(String courseId);
+
+    //课程预览
+    CoursePublishResult previewCourse(String courseId);
 
 }

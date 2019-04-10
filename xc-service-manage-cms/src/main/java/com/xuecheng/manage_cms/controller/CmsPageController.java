@@ -55,6 +55,12 @@ public class CmsPageController implements CmsPageControllerApi {
     }
 
     @Override
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public CmsPageResult addOrEditPage(@RequestBody CmsPage cmsPage) {
+        return cmsPageService.savePage(cmsPage);
+    }
+
+    @Override
     @RequestMapping("/list/{page}/{size}")
     public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size,QueryPageRequest queryPageRequest) {
 

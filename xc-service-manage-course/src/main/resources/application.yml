@@ -27,3 +27,11 @@ eureka:
     prefer-ip-address: true    #将自己的IP地址注册到eureka服务中
     ip-address: ${IP_ADDRESS:127.0.0.1}
     instance-id: ${spring.application.name}:${server.port}  #指定实例id
+
+course-publish:
+  siteId: 5cadb6577e9dc6155c3756b0
+  templateId: 5cada3d87e9dc6155c3756a6
+  previewUrl: http://localhost/cms/page/preview/
+  pageWebPath: /course/detail/
+  pagePhysicalPath: /course/detail/
+  dataUrlPre: http://localhost:31200/course/courseview/

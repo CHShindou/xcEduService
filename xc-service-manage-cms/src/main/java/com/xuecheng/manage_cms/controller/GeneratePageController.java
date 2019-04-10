@@ -27,6 +27,7 @@ public class GeneratePageController extends BaseController {
 
         try {
             String htmlContent = cmsPageService.getPageHtml(pageId);
+            response.setHeader("Content-type","text/html;charset=utf-8");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().append(htmlContent);
         } catch (IOException e) {

@@ -355,4 +355,21 @@ public class CmsPageService {
         rabbitTemplate.convertAndSend(RabbitmqConfig.EX_CMS_POSTPAGE,siteId,msg);
     }
 
+
+    //新增或者修改页面信息
+    public CmsPageResult savePage(CmsPage cmsPage){
+        if(cmsPage == null){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        List<CmsPage> list = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(
+                cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if(list.size()>0){
+            //该页面已经存在
+            return this.updatePage(list.get(0).getPageId(),cmsPage);
+        }else{
+            //页面不存在
+            return this.addPage(cmsPage);
+        }
+    }
+
 }
