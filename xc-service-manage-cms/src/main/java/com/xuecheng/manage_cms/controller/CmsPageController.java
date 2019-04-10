@@ -61,6 +61,12 @@ public class CmsPageController implements CmsPageControllerApi {
     }
 
     @Override
+    @RequestMapping(value = "/postcourse",method = RequestMethod.POST)
+    public ResponseResult postCoursePageQuik(@RequestBody CmsPage cmsPage) {
+        return cmsPageService.postCoursePageQuik(cmsPage);
+    }
+
+    @Override
     @RequestMapping("/list/{page}/{size}")
     public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size,QueryPageRequest queryPageRequest) {
 

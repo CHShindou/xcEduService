@@ -62,4 +62,7 @@ public interface CourseControllerApi {
     //课程预览
     CoursePublishResult previewCourse(String courseId);
 
+    //课程发布
+    ResponseResult postCourse(String courseId);
+
 }

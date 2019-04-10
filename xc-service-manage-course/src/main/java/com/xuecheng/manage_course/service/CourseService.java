@@ -337,5 +337,35 @@ public class CourseService {
         }
     }
 
+    //课程发布
+    public ResponseResult postCourse(String courseId){
+        CourseBase courseBase = this.findCourseBaseById(courseId);
+        if(courseBase == null){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //将课程页面添加到cmspage中
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setDataUrl(dataUrlPre + courseId);
+        cmsPage.setPagePhysicalPath(pagePhysicalPath);
+        cmsPage.setPageWebPath(pageWebPath);
+        cmsPage.setSiteId(siteId);
+        cmsPage.setTemplateId(templateId);
+        cmsPage.setPageAliase(courseBase.getName());
+        cmsPage.setPageName(courseId + ".html");
+        cmsPage.setPageCreateTime(new Date());
+
+        //通过feign调用cms接口的一键发布课程接口
+        ResponseResult responseResult = cmsPageClient.postCoursePage(cmsPage);
+
+        if(responseResult.isSuccess()){
+            //文件写入成功 将课程状态修改成已发布
+            courseBase.setStatus("202002");
+            courseBaseRepository.save(courseBase);
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        return responseResult;
+    }
+
+
 
 }

@@ -372,4 +372,17 @@ public class CmsPageService {
         }
     }
 
+    //一键发布课程页面
+    public ResponseResult postCoursePageQuik(CmsPage cmsPage){
+       //新增或者修改该课程页面信息 ，获取pageId
+        CmsPageResult cmsPageResult = this.savePage(cmsPage);
+        cmsPage = cmsPageResult.getCmsPage();
+        if(cmsPage == null){
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        String pageId = cmsPage.getPageId();
+        //通过pageId执行静态化，并写入文件
+        return this.postPage(pageId);
+    }
+
 }

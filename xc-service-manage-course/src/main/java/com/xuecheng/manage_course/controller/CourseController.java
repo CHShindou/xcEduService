@@ -50,7 +50,7 @@ public class CourseController implements CourseControllerApi {
     }
 
     @Override
-    @RequestMapping(value = "/courseview/{id}")
+    @RequestMapping(value = "/get/{id}")
     public CourseBase findCourseById(@PathVariable("id") String id) {
         return courseService.findCourseBaseById(id);
     }
@@ -111,8 +111,14 @@ public class CourseController implements CourseControllerApi {
     }
 
     @Override
-    @RequestMapping(value = "/preview/{courseId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/preview/{courseId}",method = RequestMethod.POST)
     public CoursePublishResult previewCourse(@PathVariable("courseId") String courseId) {
         return courseService.previewCourse(courseId);
+    }
+
+    @Override
+    @RequestMapping(value = "/publish/{courseId}",method = RequestMethod.POST)
+    public ResponseResult postCourse(@PathVariable("courseId") String courseId) {
+        return courseService.postCourse(courseId);
     }
 }

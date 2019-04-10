@@ -34,4 +34,7 @@ public interface CmsPageControllerApi {
 
     //新增或者修改页面信息(页面已存在则修改，页面不存在则新增)
     CmsPageResult addOrEditPage(CmsPage cmsPage);
+
+    //一键发布课程页面
+    ResponseResult postCoursePageQuik(CmsPage cmsPage);
 }

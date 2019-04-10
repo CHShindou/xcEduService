@@ -53,7 +53,7 @@ public class TestRestTemplate {
     @Test
     public void testGridFs() throws FileNotFoundException {
         //要存储的文件
-        File file = new File("F:/course.ftl");
+        File file = new File("E:\\XmyTemp\\course.ftl");
         //获取输入流写入
         FileInputStream fileInputStream = new FileInputStream(file);
         //向GridFs中存入
