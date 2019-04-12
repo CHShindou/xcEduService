@@ -5,13 +5,20 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.IndicesClient;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.rest.RestStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +77,7 @@ public class ElasiticSearchTest {
                 "},\n" +
                 "\"timestamp\": {\n" +
                 "\"type\": \"date\",\n" +
-                "\"format\": \"yyyy‐MM‐dd HH:mm:ss||yyyy‐MM‐dd||epoch_millis\"\n" +
+                "\"format\": \"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n" +
                 "}\n" +
                 "}\n" +
                 "}", XContentType.JSON);
@@ -117,7 +124,7 @@ public class ElasiticSearchTest {
         map.put("description", "这里是描述信息，我就不详细讲了，主要用来测试用的，随便写写够个几十字就行了");
         map.put("price", 5.6f);
         map.put("studymodel","201001");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy‐MM‐dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         map.put("timestamp",simpleDateFormat.format(new Date()));
 
         //创建   索引请求对象
@@ -131,6 +138,56 @@ public class ElasiticSearchTest {
 
         //获取响应结果
         DocWriteResponse.Result result = indexResponse.getResult();
+        System.out.println(result);
+    }
+
+
+    /**
+     * 查询文档
+     */
+    @Test
+    public void queryDocument() throws Exception{
+        //创建 查询请求对象（通过文档ID来查询,并非搜索）
+        GetRequest getRequest = new GetRequest("xc_course","doc","23333");
+
+        //响应对象
+        GetResponse getResponse = restHighLevelClient.get(getRequest);
+        if(getResponse.isExists()){
+            Map<String, Object> sourceAsMap = getResponse.getSourceAsMap();
+            System.out.println(sourceAsMap);
+        }
+    }
+
+    /**
+     * 更新文档
+     */
+    @Test
+    public void updateDocument()throws Exception{
+        // 更新请求对象
+        UpdateRequest updateRequest = new UpdateRequest("xc_course","doc","23333");
+
+        //设置更新的内容
+        Map<String,Object> map = new HashMap<>();
+        map.put("price",55.2);
+        updateRequest.doc(map);
+        //更新并获取响应对象
+        UpdateResponse updateResponse = restHighLevelClient.update(updateRequest);
+        DocWriteResponse.Result result = updateResponse.getResult();
+        RestStatus status = updateResponse.status();
+        System.out.println(status);
+        System.out.println(result);
+    }
+
+
+    //删除文档（根据文档ID删除）
+    @Test
+    public void deleteDocument()throws Exception{
+        //删除文档请求对象
+        DeleteRequest deleteRequest = new DeleteRequest("xc_course","doc","7iwmA6cASQuc5z4-IUCIUQ");
+
+        DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest);
+
+        DocWriteResponse.Result result = deleteResponse.getResult();
         System.out.println(result);
     }
 }

@@ -5,4 +5,4 @@ spring:
     name: xc-search-service
 xuecheng:
   elasticsearch:
-    hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
+    hostlist: ${eshostlist:127.0.0.1:9200,192.168.36.120:9200} #多个结点中间用逗号分隔
