@@ -1,14 +1,11 @@
 package com.xuecheng.manage_course.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.netflix.discovery.converters.Auto;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
-import com.xuecheng.framework.domain.course.CourseBase;
-import com.xuecheng.framework.domain.course.CoursePic;
-import com.xuecheng.framework.domain.course.CourseMarket;
-import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.*;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.CourseView;
@@ -22,17 +19,15 @@ import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.client.CmsPageClient;
-import com.xuecheng.manage_course.dao.CourseBaseRepository;
-import com.xuecheng.manage_course.dao.CourseMapper;
-import com.xuecheng.manage_course.dao.CoursePicRepository;
-import com.xuecheng.manage_course.dao.CourseMarketRepository;
-import com.xuecheng.manage_course.dao.TeachplanRepository;
+import com.xuecheng.manage_course.dao.*;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +72,9 @@ public class CourseService {
 
     @Autowired
     CmsPageClient cmsPageClient;
+
+    @Autowired
+    CoursePubRepository coursePubRepository;
 
 
     //查询课程计划
@@ -338,6 +336,7 @@ public class CourseService {
     }
 
     //课程发布
+    @Transactional
     public ResponseResult postCourse(String courseId){
         CourseBase courseBase = this.findCourseBaseById(courseId);
         if(courseBase == null){
@@ -361,9 +360,56 @@ public class CourseService {
             //文件写入成功 将课程状态修改成已发布
             courseBase.setStatus("202002");
             courseBaseRepository.save(courseBase);
+
+            //课程发布成功之后，将课程的所有信息添加到course_pub表中，方便采集数据到ElasticSearch服务器
+            CoursePub coursePub = this.insertCoursePub(courseId);
+            if(coursePub == null){
+                ExceptionCast.cast(CourseCode.COURSE_PUBLISH_VIEWERROR);
+            }
+
             return new ResponseResult(CommonCode.SUCCESS);
         }
         return responseResult;
+    }
+
+
+    //保存coursePub数据到数据库
+    private CoursePub insertCoursePub(String courseId){
+        //初始化一个coursePub对象
+        CoursePub coursePub = new CoursePub();
+        //查询courseBase
+        Optional<CourseBase> optionalCourseBase = courseBaseRepository.findById(courseId);
+        if(optionalCourseBase.isPresent()){
+            BeanUtils.copyProperties(optionalCourseBase.get(),coursePub);
+        }
+
+        //查询coursePic
+        Optional<CoursePic> optionalCoursePic = coursePicRepository.findById(courseId);
+        if(optionalCoursePic.isPresent()){
+            BeanUtils.copyProperties(optionalCoursePic.get(),coursePub);
+        }
+
+        //查询courseMarket
+        Optional<CourseMarket> optionalCourseMarket = courseMarketRepository.findById(courseId);
+        if(optionalCourseMarket.isPresent()){
+            BeanUtils.copyProperties(optionalCourseMarket.get(),coursePub);
+        }
+
+        //查询teachplan
+        TeachplanNode teachplanNode = this.findTeachplanTreeList(courseId);
+        if(teachplanNode != null){
+            String jsonString = JSON.toJSONString(teachplanNode);
+            coursePub.setTeachplan(jsonString);
+        }
+        //添加其他参数
+        coursePub.setTimestamp(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        coursePub.setPubTime(sdf.format(new Date()));
+
+        //保存到数据库
+        coursePubRepository.save(coursePub);
+        return coursePub;
+
     }
 
 
