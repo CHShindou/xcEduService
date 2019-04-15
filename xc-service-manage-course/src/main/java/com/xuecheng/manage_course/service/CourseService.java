@@ -367,7 +367,6 @@ public class CourseService {
                 ExceptionCast.cast(CourseCode.COURSE_PUBLISH_VIEWERROR);
             }
 
-            return new ResponseResult(CommonCode.SUCCESS);
         }
         return responseResult;
     }
@@ -402,6 +401,7 @@ public class CourseService {
             coursePub.setTeachplan(jsonString);
         }
         //添加其他参数
+        coursePub.setId(courseId);
         coursePub.setTimestamp(new Date());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         coursePub.setPubTime(sdf.format(new Date()));
