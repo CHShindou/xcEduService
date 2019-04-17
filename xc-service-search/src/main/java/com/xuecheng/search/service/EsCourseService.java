@@ -2,7 +2,6 @@ package com.xuecheng.search.service;
 
 import com.xuecheng.framework.domain.course.CoursePub;
 import com.xuecheng.framework.domain.search.CourseSearchParam;
-import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -14,7 +13,6 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -69,7 +67,7 @@ public class EsCourseService {
             page = 1;
         }
         if(size <= 0){
-            size = 10;
+            size = 5;
         }
         SearchRequest searchRequest = new SearchRequest(index);
         searchRequest.types(type);
@@ -163,6 +161,7 @@ public class EsCourseService {
             coursePub.setPic((String) sourceAsMap.get("pic"));
             coursePub.setPrice((Double) sourceAsMap.get("price"));
             coursePub.setPrice_old((Double) sourceAsMap.get("price_old"));
+            coursePub.setName((String) sourceAsMap.get("name"));
 
             //获取高亮字段
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
