@@ -1,15 +1,18 @@
 package com.xuecheng.manage_media.service;
 
+import com.alibaba.fastjson.JSON;
 import com.xuecheng.framework.domain.media.MediaFile;
 import com.xuecheng.framework.domain.media.response.CheckChunkResult;
 import com.xuecheng.framework.domain.media.response.MediaCode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.ResponseResult;
+import com.xuecheng.manage_media.config.RabbitMQConfig;
 import com.xuecheng.manage_media.dao.MediaFileRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,9 +35,16 @@ public class MediaUploadService {
     @Autowired
     MediaFileRepository mediaFileRepository;
 
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     //上传文件根路径
     @Value("${xc-service-manage-media.upload-location}")
     String parentPath;
+
+    //获取rabbitmq配置路由
+    @Value("${xc-service-manage-media.mq.routingkey-media-video}")
+    String routingKey;
 
 
     /**根据Md5获取文件目录
@@ -57,8 +67,8 @@ public class MediaUploadService {
     }
 
     //获取文件的相对路径，不包含根路径
-    private String getFileRelativePath(String fileMd5,String fileExt){
-        return fileMd5.substring(0,1)+"/"+fileMd5.substring(1,2)+"/"+fileMd5+"/"+fileMd5+"."+fileExt;
+    private String getFileRelativePath(String fileMd5){
+        return fileMd5.substring(0,1)+"/"+fileMd5.substring(1,2)+"/"+fileMd5+"/";
     }
 
 
@@ -184,6 +194,12 @@ public class MediaUploadService {
         //校验成功，将文件信息添加到数据库中
         MediaFile mediaFile = this.saveMediaFile(fileMd5, fileName, fileSize, mimeType, fileExt);
 
+        //发送消息给rabbitmq
+        Map<String,String> msgMap = new HashMap<>();
+        msgMap.put("mediaId",mediaFile.getFileId());
+        String msg = JSON.toJSONString(msgMap);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EX_MEDIA_PROCESSTASK, routingKey, msg);
+
         return new ResponseResult(CommonCode.SUCCESS);
 
     }
@@ -265,7 +281,7 @@ public class MediaUploadService {
         mediaFile.setFileOriginalName(fileName);
 
         //文件的相对路径
-        mediaFile.setFilePath(this.getFileRelativePath(fileMd5,fileExt));
+        mediaFile.setFilePath(this.getFileRelativePath(fileMd5));
 
         mediaFile.setFileSize(fileSize);
         mediaFile.setMimeType(mimeType);
