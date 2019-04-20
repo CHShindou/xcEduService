@@ -14,10 +14,7 @@ import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.domain.course.response.CoursePublishResult;
 import com.xuecheng.framework.exception.ExceptionCast;
-import com.xuecheng.framework.model.response.CommonCode;
-import com.xuecheng.framework.model.response.QueryResponseResult;
-import com.xuecheng.framework.model.response.QueryResult;
-import com.xuecheng.framework.model.response.ResponseResult;
+import com.xuecheng.framework.model.response.*;
 import com.xuecheng.manage_course.client.CmsPageClient;
 import com.xuecheng.manage_course.dao.*;
 import org.apache.commons.lang.StringUtils;
@@ -75,6 +72,9 @@ public class CourseService {
 
     @Autowired
     CoursePubRepository coursePubRepository;
+
+    @Autowired
+    TeachplanMediaRepository teachplanMediaRepository;
 
 
     //查询课程计划
@@ -409,6 +409,29 @@ public class CourseService {
         //保存到数据库
         coursePubRepository.save(coursePub);
         return coursePub;
+
+    }
+
+
+    //添加课程计划媒资文件
+    public ResponseResult addTeachPlanMedia(TeachplanMedia teachplanMedia){
+        if(teachplanMedia == null || StringUtils.isEmpty(teachplanMedia.getTeachplanId())){
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+
+        //验证该课程计划是否是第三级
+        Optional<Teachplan> optionalTeachplan = teachplanRepository.findById(teachplanMedia.getTeachplanId());
+        if(!optionalTeachplan.isPresent()){
+            ExceptionCast.cast(CourseCode.COURSE_TEACHPLAN_ERROR);
+        }
+        Teachplan teachplan = optionalTeachplan.get();
+        String grade = teachplan.getGrade();
+        if(!"3".equals(grade)){
+            ExceptionCast.cast(CourseCode.COURSE_MEDIA_TEACHPLAN_GRADEERROR);
+        }
+        teachplanMediaRepository.save(teachplanMedia);
+
+        return new ResponseResult(CommonCode.SUCCESS);
 
     }
 

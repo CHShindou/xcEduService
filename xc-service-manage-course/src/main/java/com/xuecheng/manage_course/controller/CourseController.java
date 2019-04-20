@@ -1,10 +1,7 @@
 package com.xuecheng.manage_course.controller;
 
 import com.xuecheng.api.course.CourseControllerApi;
-import com.xuecheng.framework.domain.course.CourseBase;
-import com.xuecheng.framework.domain.course.CourseMarket;
-import com.xuecheng.framework.domain.course.CoursePic;
-import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.*;
 import com.xuecheng.framework.domain.course.ext.CategoryNode;
 import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
@@ -120,5 +117,11 @@ public class CourseController implements CourseControllerApi {
     @RequestMapping(value = "/publish/{courseId}",method = RequestMethod.POST)
     public ResponseResult postCourse(@PathVariable("courseId") String courseId) {
         return courseService.postCourse(courseId);
+    }
+
+    @Override
+    @RequestMapping(value = "/savemedia", method = RequestMethod.POST)
+    public ResponseResult addTeachPlanMedia(@RequestBody TeachplanMedia teachplanMedia) {
+        return courseService.addTeachPlanMedia(teachplanMedia);
     }
 }

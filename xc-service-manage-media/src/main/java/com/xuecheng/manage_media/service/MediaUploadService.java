@@ -289,6 +289,8 @@ public class MediaUploadService {
         mediaFile.setFileType(fileExt);
         //文件状态
         mediaFile.setFileStatus("301002");
+        //文件处理状态设置成未处理
+        mediaFile.setProcessStatus("303001");
 
         mediaFile = mediaFileRepository.save(mediaFile);
 
