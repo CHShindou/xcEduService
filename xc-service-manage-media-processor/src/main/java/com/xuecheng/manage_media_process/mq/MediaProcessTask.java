@@ -38,6 +38,8 @@ public class MediaProcessTask {
     String ffmpegPath;
 
 
+    //@RabbitListener(queues = {"${xc-service-manage-media.mq.queue-media-video-processor}"},containerFactory = "customContainerFactory")
+
     @RabbitListener(queues = "${xc-service-manage-media.mq.queue-media-video-processor}")
     public void receiveMediaProcessTask(String msg){
 
@@ -92,10 +94,10 @@ public class MediaProcessTask {
         String m3u8Result = sVideoUtil.generateM3u8();
         if(!"success".equals(m3u8Result)){
             //转换失败，写入处理日志
-            mediaFile.setProcessStatus("303003");   //处理状态改为处理失败
             MediaFileProcess_m3u8 mediaFileProcess_m3u8 = new MediaFileProcess_m3u8();
             mediaFileProcess_m3u8.setErrormsg(m3u8Result);
             mediaFile.setMediaFileProcess_m3u8(mediaFileProcess_m3u8);
+            mediaFile.setProcessStatus("303003");   //处理状态改为处理失败
             mediaFileRepository.save(mediaFile);
             return;
         }

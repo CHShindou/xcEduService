@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +76,9 @@ public class CourseService {
 
     @Autowired
     TeachplanMediaRepository teachplanMediaRepository;
+
+    @Autowired
+    TeachplanMediaPubRepository teachplanMediaPubRepository;
 
 
     //查询课程计划
@@ -367,8 +371,32 @@ public class CourseService {
                 ExceptionCast.cast(CourseCode.COURSE_PUBLISH_VIEWERROR);
             }
 
+            //将课程计划与媒资的关联信息写入teachplan_media_pub表中，方便数据采集
+            this.insertTeachplanMediaPub(courseId);
+
         }
         return responseResult;
+    }
+
+
+    //保存TeachplanMediaPub到数据库中
+    private void insertTeachplanMediaPub(String courseId){
+        //首先通过courseId查询teachplanMedia表
+        List<TeachplanMedia> teachplanMediaList = teachplanMediaRepository.findByCourseId(courseId);
+
+        //然后通过courseId删除teachplanMediaPub表中的数据
+        teachplanMediaPubRepository.deleteByCourseId(courseId);
+
+        List<TeachplanMediaPub> lists = new ArrayList<>();
+        for (TeachplanMedia teachplanMedia:teachplanMediaList){
+            TeachplanMediaPub teachplanMediaPub = new TeachplanMediaPub();
+            BeanUtils.copyProperties(teachplanMedia,teachplanMediaPub);
+            teachplanMediaPub.setTimestamp(new Date());
+            lists.add(teachplanMediaPub);
+        }
+
+        //重新保存数据到teachplanMediaPub表中
+        teachplanMediaPubRepository.saveAll(lists);
     }
 
 
