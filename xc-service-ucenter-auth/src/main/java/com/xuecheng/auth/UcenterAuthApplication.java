@@ -22,9 +22,4 @@ public class UcenterAuthApplication {
         SpringApplication.run(UcenterAuthApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate(new OkHttp3ClientHttpRequestFactory());
-    }
-
 }
