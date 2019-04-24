@@ -1,4 +1,4 @@
-package com.xuecheng.api.ucenter;
+package com.xuecheng.api.auth;
 
 import com.xuecheng.framework.domain.ucenter.request.LoginRequest;
 import com.xuecheng.framework.domain.ucenter.response.LoginResult;

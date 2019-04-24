@@ -8,9 +8,9 @@ public class XcServiceList {
     public static final String XC_SERVICE_MANAGE_COURSE = "xc-service-manage-course";
     public static final String XC_SERVICE_MANAGE_MEDIA = "xc-service-manage-media";
     public static final String XC_SERVICE_MANAGE_CMS = "xc-service-manage-cms";
-    public static final String XC_SERVICE_UCENTER = "xc-service-ucenter";
-    public static final String XC_SERVICE_UCENTER_AUTH = "xc-service-ucenter-auth";
-    public static final String XC_SERVICE_UCENTER_JWT = "xc-service-ucenter-jwt";
+    public static final String XC_SERVICE_UCENTER = "xc-service-auth";
+    public static final String XC_SERVICE_UCENTER_AUTH = "xc-service-auth-auth";
+    public static final String XC_SERVICE_UCENTER_JWT = "xc-service-auth-jwt";
     public static final String XC_SERVICE_BASE_FILESYSTEM = "xc-service-base-filesystem";
     public static final String XC_GOVERN_GATEWAY = "xc-govern-gateway";
     public static final String XC_SERVICE_BASE_ID = "xc-service-base-id";

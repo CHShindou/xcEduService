@@ -1,6 +1,6 @@
 package com.xuecheng.auth.Controller;
 
-import com.xuecheng.api.ucenter.AuthControllerApi;
+import com.xuecheng.api.auth.AuthControllerApi;
 import com.xuecheng.auth.service.AuthService;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.request.LoginRequest;
