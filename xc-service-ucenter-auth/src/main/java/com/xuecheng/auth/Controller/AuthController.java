@@ -5,6 +5,7 @@ import com.xuecheng.auth.service.AuthService;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.request.LoginRequest;
 import com.xuecheng.framework.domain.ucenter.response.AuthCode;
+import com.xuecheng.framework.domain.ucenter.response.JwtResult;
 import com.xuecheng.framework.domain.ucenter.response.LoginResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @Auther : shindou
@@ -81,6 +84,47 @@ public class AuthController implements AuthControllerApi {
     @Override
     @RequestMapping(value = "/userlogout",method = RequestMethod.POST)
     public ResponseResult logout() {
+        String accessToken = this.getAccessToken();
+        //清空redis中的令牌
+        authService.deleteJwtToken(accessToken);
+
+        //删除cookie
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        //将cookie存活时间设置为0
+        CookieUtil.addCookie(response,cookieDomain,"/","uid","",0,false);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+
+    /**
+     * 从cookie中获取访问令牌  查询Jwt令牌
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "/userjwt",method = RequestMethod.GET)
+    public JwtResult getUserJwt() {
+        //获取访问令牌
+        String accessToken = this.getAccessToken();
+        if(accessToken == null){
+            return new JwtResult(CommonCode.FAIL,null);
+        }
+        AuthToken authToken = authService.getUserJwtByCookie(accessToken);
+        if (authToken == null){
+            return new JwtResult(CommonCode.FAIL,null);
+        }
+        String jwt_token = authToken.getJwt_token();
+
+        return new JwtResult(CommonCode.SUCCESS,jwt_token);
+    }
+
+    //从cookie中获取访问令牌
+    private String getAccessToken(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Map<String, String> map = CookieUtil.readCookie(request, "uid");
+        if(map != null){
+            String accessToken = map.get("uid");
+            return accessToken;
+        }
         return null;
     }
 }

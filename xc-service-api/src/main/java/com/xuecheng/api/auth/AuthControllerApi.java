@@ -1,6 +1,7 @@
 package com.xuecheng.api.auth;
 
 import com.xuecheng.framework.domain.ucenter.request.LoginRequest;
+import com.xuecheng.framework.domain.ucenter.response.JwtResult;
 import com.xuecheng.framework.domain.ucenter.response.LoginResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 
@@ -20,4 +21,7 @@ public interface AuthControllerApi {
 
     //退出登录
     ResponseResult logout();
+
+    //Jwt查询接口
+    JwtResult getUserJwt();
 }

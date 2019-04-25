@@ -5,6 +5,7 @@ import com.netflix.ribbon.proxy.annotation.Http;
 import com.xuecheng.framework.client.XcServiceList;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.response.AuthCode;
+import com.xuecheng.framework.domain.ucenter.response.JwtResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
@@ -133,6 +134,13 @@ public class AuthService {
         Map exchangeBody = exchange.getBody();
         if(exchangeBody == null || exchangeBody.get("access_token") == null ||
                 exchangeBody.get("refresh_token") == null || exchangeBody.get("jti") == null){
+
+            String error_des = (String) exchangeBody.get("error_description");
+            if("坏的凭证".equals(error_des)){
+                ExceptionCast.cast(AuthCode.AUTH_CREDENTIAL_ERROR);
+            }else if(error_des.indexOf("UserDetailsService returned null")>=0){
+                ExceptionCast.cast(AuthCode.AUTH_ACCOUNT_NOTEXISTS);
+            }
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
         }
         AuthToken authToken = new AuthToken();
@@ -159,5 +167,31 @@ public class AuthService {
 
         byte[] encode = Base64.encode(httpString.getBytes());
         return "Basic " + new String(encode);
+    }
+
+
+    //根据cookie查询redis中的jwt
+    public AuthToken getUserJwtByCookie(String cookie){
+        String key = "user_token" + cookie;
+        String tokenString = stringRedisTemplate.opsForValue().get(key);
+        if(tokenString != null){
+            AuthToken authToken = null;
+            try{
+                authToken = JSON.parseObject(tokenString, AuthToken.class);
+            }catch (Exception e){
+                LOGGER.error("getUserToken from redis and Execute JSON.parseObject error{}",e.getMessage());
+                e.printStackTrace();
+            }
+            return authToken;
+        }
+        return null;
+    }
+
+
+    //从redis中删除令牌
+    public boolean deleteJwtToken(String cookie){
+        String key = "user_token" + cookie;
+        Boolean delete = stringRedisTemplate.delete(key);
+        return delete;
     }
 }
