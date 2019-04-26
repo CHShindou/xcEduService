@@ -1,11 +1,9 @@
 package com.xuecheng.auth.service;
 
 import com.alibaba.fastjson.JSON;
-import com.netflix.ribbon.proxy.annotation.Http;
 import com.xuecheng.framework.client.XcServiceList;
 import com.xuecheng.framework.domain.ucenter.ext.AuthToken;
 import com.xuecheng.framework.domain.ucenter.response.AuthCode;
-import com.xuecheng.framework.domain.ucenter.response.JwtResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
@@ -78,7 +76,7 @@ public class AuthService {
     private boolean saveToken(AuthToken authToken,int validityTimes){
 
         //设置key的值
-        String key = "user_token" + authToken.getAccess_token();
+        String key = "user_token:" + authToken.getAccess_token();
 
         //设置value的值
         String value = JSON.toJSONString(authToken);
@@ -172,7 +170,7 @@ public class AuthService {
 
     //根据cookie查询redis中的jwt
     public AuthToken getUserJwtByCookie(String cookie){
-        String key = "user_token" + cookie;
+        String key = "user_token:" + cookie;
         String tokenString = stringRedisTemplate.opsForValue().get(key);
         if(tokenString != null){
             AuthToken authToken = null;
@@ -190,7 +188,7 @@ public class AuthService {
 
     //从redis中删除令牌
     public boolean deleteJwtToken(String cookie){
-        String key = "user_token" + cookie;
+        String key = "user_token:" + cookie;
         Boolean delete = stringRedisTemplate.delete(key);
         return delete;
     }
