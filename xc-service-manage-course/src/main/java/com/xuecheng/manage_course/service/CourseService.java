@@ -150,9 +150,14 @@ public class CourseService {
 
     //查询课程信息，分页查询
     public QueryResponseResult findCourseInfoPageAndParam(
-           int page, int size, CourseListRequest courseListRequest){
+           String companyId,int page, int size, CourseListRequest courseListRequest){
 
         //courseListRequest搜索参数吧。
+        if(courseListRequest == null){
+            courseListRequest = new CourseListRequest();
+        }
+        courseListRequest.setCompanyId(companyId);
+
         PageHelper.startPage(page,size);
         Page<CourseInfo> pages = courseMapper.findCourseInfo(courseListRequest);
         QueryResult queryResult = new QueryResult();

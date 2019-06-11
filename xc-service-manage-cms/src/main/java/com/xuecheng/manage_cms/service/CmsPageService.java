@@ -256,6 +256,27 @@ public class CmsPageService {
         if(StringUtils.isEmpty(dataUrl)){
             ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAURLISNULL);
         }
+        /*
+           //远程调用course服务接口，需要携带JWT令牌，否则没有权限
+           //将请求头部信息添加到restTemplate中
+           Enumeration<String> headerNames = request.getHeaderNames();
+           MultiValueMap<String,String> header = new LinkedMultiValueMap<>(); //设置请求头部
+           MultiValueMap<String,String> body = new LinkedMultiValueMap<>();   //设置请求体
+           if(headerNames != null){
+                while(headerNames.hasMoreElements){
+                    String name = headerNames.nextElement();
+                    if("Authorization".equalsIgnoreCase(name)){
+                        String value = request.getHeader(name);
+                        header.add("Authorization",value);
+                }
+           }
+           HttpEntity<MultiValueMap<String,String>> httpEntity = new HttpEntity<>(body,header);
+
+           ResponseEntity<Map> forEntity = restTemplate.exchange(dataUrl,HttpMethod.GET,httpEntity,Map.class);
+
+           //或者controller直接将JWT令牌放进参数中传递
+
+         */
         ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
         Map body = forEntity.getBody();
         return body;

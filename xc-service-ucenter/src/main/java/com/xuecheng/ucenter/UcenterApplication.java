@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("com.xuecheng.ucenter.dao")
+@MapperScan(basePackages = {"com.xuecheng.ucenter.dao"})
 @EntityScan("com.xuecheng.framework.domain.ucenter")//扫描实体类
 @ComponentScan(basePackages={"com.xuecheng.api"})//扫描接口
 @ComponentScan(basePackages={"com.xuecheng.framework"})//扫描common下的所有类
