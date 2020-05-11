@@ -6,7 +6,7 @@ import com.xuecheng.framework.domain.media.MediaFileProcess_m3u8;
 import com.xuecheng.framework.utils.HlsVideoUtil;
 import com.xuecheng.framework.utils.Mp4VideoUtil;
 import com.xuecheng.manage_media_process.dao.MediaFileRepository;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

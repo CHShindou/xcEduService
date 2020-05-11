@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="maven-archiver (1)" />
+        <module name="maven-archiver (2)" />
+        <module name="maven-archiver (3)" />
+        <module name="maven-archiver (4)" />
+        <module name="test-fastdfs" />
+        <module name="xc-framework-common" />
+        <module name="xc-framework-model" />
+        <module name="xc-framework-utils" />
+        <module name="xc-govern-center" />
+        <module name="xc-govern-gateway" />
+        <module name="xc-service-api" />
+        <module name="xc-service-base-filesystem" />
+        <module name="xc-service-learning" />
+        <module name="xc-service-manage-cms" />
+        <module name="xc-service-manage-cms-client" />
+        <module name="xc-service-manage-course" />
+        <module name="xc-service-manage-media" />
+        <module name="xc-service-manage-media-processor" />
+        <module name="xc-service-manage-order" />
+        <module name="xc-service-search" />
+        <module name="xc-service-ucenter" />
+        <module name="xc-service-ucenter-auth" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
